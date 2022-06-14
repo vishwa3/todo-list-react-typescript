@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
 import "./styles.css";
+import { Todo } from "../models/models";
 
 interface Props {
-  addTodo: (param: any) => void;
+  addTodo: (todo: Todo, todoToBeAdded: string) => void;
 }
 
 const InputField: React.FC<Props> = ({ addTodo }: Props) => {
@@ -13,7 +14,7 @@ const InputField: React.FC<Props> = ({ addTodo }: Props) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (todo !== undefined && todo !== null && todo !== "") {
-      addTodo(todo);
+      addTodo({ id: Date.now(), todo: todo, isEdit: false }, "active");
       setTodo("");
     }
     inputRref.current?.blur();
