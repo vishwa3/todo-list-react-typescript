@@ -1,20 +1,23 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import "./styles.css";
-import { Todo } from "../models/models";
 
-interface Props {
-  addTodo: (todo: Todo, todoToBeAdded: string) => void;
-}
+import { TodoContext } from "../context/Context";
 
-const InputField: React.FC<Props> = ({ addTodo }: Props) => {
+const InputField: React.FC = () => {
   const [todo, setTodo] = useState<string>("");
-
+  const { dispatch } = useContext(TodoContext);
   const inputRref = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (todo !== undefined && todo !== null && todo !== "") {
-      addTodo({ id: Date.now(), todo: todo, isEdit: false }, "active");
+      dispatch({
+        type: "ADD_TASK",
+        payload: {
+          todo: { id: Date.now(), todo: todo, isEdit: false },
+          todoToBeAdded: "active",
+        },
+      });
       setTodo("");
     }
     inputRref.current?.blur();
@@ -23,6 +26,7 @@ const InputField: React.FC<Props> = ({ addTodo }: Props) => {
     e.preventDefault();
     setTodo(e.target.value);
   };
+
   return (
     <form className="input" onSubmit={handleSubmit}>
       <input
